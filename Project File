@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_NAME_LENGTH 100
+
+void printLine(int n, char symbol)
+{
+    for(int i=0; i<n; i++)
+        printf("%c", symbol);
+    printf("\n");
+}
+ 
+void rules()
+{
+    system("cls");
+    printf("\n\n");
+    printLine(70,'-');
+    printf("\t\tRULES OF THE GAME\n");
+    printLine(80,'-');
+    printf("\t1. Choose any number between 1 to 10\n");
+    printf("\t2. If you win you will get 10 times of the money you bet\n");
+    printf("\t3. If you failed to guess the correct number you will lose your betting amount\n\n");
+    printLine(70,'-');
+}
+ 
+int main()
+{
+    char playerName[MAX_NAME_LENGTH];
+    int amount; // hold player's balance amount
+    int bettingAmount;// hold the player betting amount
+    int guessNum;// hold player's guessed number
+    int dice; // hold computer generated number
+    char choice;
+ 
+    srand(time(0)); // "Seed" the random generator
+
+    printLine(40,'_');
+    printf("\n\n\n\t!!**CASINO GAME**!!\n\n\n");
+    printLine(40,'_');
+ 
+    printf("\n\nEnter Your Name : ");
+    fgets(playerName, MAX_NAME_LENGTH, stdin);
+    playerName[strcspn(playerName, "\n")] = 0; // Remove newline if present
+ 
+    printf("\n\nEnter the amount you wanted to deposit to play the game : $");
+    scanf("%d", &amount);
+    
+    do
+    {
+        system("cls");
+        rules();
+        printf("\n\nYour current balance is $ %d\n", amount);
+		
+		// Get player's betting amount
+        do
+        {
+            printf("%s, enter the amount you want to bet : $", playerName);
+            scanf("%d", &bettingAmount);
+            if(bettingAmount > amount)
+                printf("Your betting amount is more than your current balance\n"
+                       "\nRe-enter data\n ");
+        }while(bettingAmount > amount);
+ 
+		// Get player's guessed numbers
+        do
+        {
+            printf("Guess your number to bet between 1 to 10 :");
+            scanf("%d", &guessNum);
+            if(guessNum <= 0 || guessNum > 10)
+                printf("you enter wrong number!! should be between 1 to 10\n"
+                    "\nRe-enter data\n ");
+        }while(guessNum <= 0 || guessNum > 10);
+ 
+        dice = rand()%10 + 1; // Will hold the randomly generated integer between 1 and 10
+    
+        if(dice == guessNum)
+        {
+            printf("\n\nGood Luck %s!! You won Dollar.%d", playerName, bettingAmount * 10);
+            amount = amount + bettingAmount * 10;
+        }
+        else
+        {
+            printf("Better Luck next time !! You lost $ %d\n", bettingAmount);
+            amount = amount - bettingAmount;
+        }
+ 
+        printf("\nThe winning number was : %d\n", dice);
+        printf("\n%s, Your Current Balance is $ %d\n", playerName, amount);
+        if(amount == 0)
+        {
+            printf("You don't have any money to play ");
+            break;
+        }else{
+        printf("\n\n-->Do you want to play again (y/n)? ");		
+        scanf(" %c", &choice);
+        }
+    }while(choice =='Y'|| choice=='y');
+    
+    printf("\n\n\n");
+    printLine(70,'=');
+    printf("\n\nThank You for playing game. Your balance amount is $ %d\n\n", amount);
+    printLine(70,'=');
+ 
+    return 0;
+}
+
